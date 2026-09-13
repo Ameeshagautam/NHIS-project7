@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disaster Tweet Classifier</title>
+<style>
+  :root {
+    --bg: #F5F7FA;
+    --panel: #FFFFFF;
+    --ink: #16213A;
+    --ink-soft: #4B5768;
+    --border: #D8DEE6;
+    --accent: #3D5A80;
+    --accent-dark: #2E4560;
+    --disaster: #C1443C;
+    --disaster-bg: #FBECEA;
+    --safe: #3A7D5C;
+    --safe-bg: #EBF4EF;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    padding: 64px 20px;
+  }
+
+  main {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+
+  p.lede {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin: 0 0 36px;
+    max-width: 46ch;
+  }
+
+  form {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    resize: vertical;
+    background: var(--bg);
+  }
+
+  textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    background: var(--panel);
+  }
+
+  button {
+    margin-top: 14px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 11px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  button:hover { background: var(--accent-dark); }
+  button:focus-visible { outline: 2px solid var(--accent-dark); outline-offset: 2px; }
+
+  .result {
+    margin-top: 24px;
+    padding: 18px 20px;
+    border-radius: 3px;
+    border-left: 4px solid;
+  }
+
+  .result.disaster {
+    background: var(--disaster-bg);
+    border-left-color: var(--disaster);
+  }
+
+  .result.safe {
+    background: var(--safe-bg);
+    border-left-color: var(--safe);
+  }
+
+  .result-label {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  .result.disaster .result-label { color: var(--disaster); }
+  .result.safe .result-label { color: var(--safe); }
+
+  .result-detail {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  footer {
+    margin-top: 28px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Is this tweet about a real disaster?</h1>
+  <p class="lede">Paste tweet text below. The model reads the wording itself, not just keywords, so it can tell an actual emergency apart from a casual or metaphorical mention.</p>
+
+  <form method="POST">
+    <label for="tweet_text">Tweet text</label>
+    <textarea id="tweet_text" name="tweet_text" placeholder="Forest fire spreading near Highway 41, evacuations underway...">{{ tweet_text }}</textarea>
+    <button type="submit">Classify tweet</button>
+
+    {% if result %}
+    <div class="result {{ 'disaster' if result == 'Disaster' else 'safe' }}">
+      <p class="result-label">{{ result }}</p>
+      <p class="result-detail">The model is {{ confidence }}% confident in this classification.</p>
+    </div>
+    {% endif %}
+  </form>
+
+  <footer>Classroom project demo &mdash; not a real emergency alert system.</footer>
+</main>
+</body>
+</html>
